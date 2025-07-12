@@ -341,10 +341,13 @@
                     console.log("failed to handle answer");
                 }
             }
-            document.querySelector("#video-call-btn")
-                .addEventListener("click", function () {
-                    socket.emit("startVideoCall", { room })
-                })
+            document.querySelector("#video-call-btn").addEventListener("click", function () {
+                socket.emit("startVideoCall", { room });
+
+                // Show the ringing popup
+                document.getElementById("ringing-popup").classList.remove("hidden");
+            });
+
 
             socket.on("incomingCall", function () {
                 console.log("hey");
@@ -352,6 +355,7 @@
             })
 
             socket.on("callAccepted", function () {
+                document.getElementById("ringing-popup").classList.add("hidden");
                 initialize();
                 document.querySelector(".videoblock").classList.remove("hidden");
             })
@@ -369,6 +373,7 @@
                 })
 
             socket.on("callRejected", function () {
+                document.getElementById("ringing-popup").classList.add("hidden");
                 alert("Call rejected by other user");
             })
 
@@ -389,6 +394,13 @@
                 }
             }
         </script>
+        <div id="ringing-popup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50">
+        <div class="bg-white text-black px-6 py-4 rounded-xl shadow-lg text-center">
+            <p class="text-xl font-semibold mb-2">📞 Ringing...</p>
+            <p>Waiting for the other user to accept the video call.</p>
+        </div>
+        </div>
+
 </body>
 
 </html>
